@@ -1,0 +1,64 @@
+---
+  # Title: LXDE on ubuntu
+  #
+  # Author: Luc Rutten
+  # Version: 1.0
+  #
+  # Description: Standardized lightweight gui for Ubuntu server
+  # File: tasks/main.yml
+  
+  - name: "Install lubuntu-desktop (Basic)"
+    apt:
+      name: lubuntu-desktop
+      update_cache: yes
+      state: present
+      install_recommends: no
+
+  - name: "Install additional packages"
+    apt:
+      name: "{{ item }}"
+      update_cache: yes
+      state: present
+    with_items:
+      - lxterminal
+      - lxappearence
+      - lxshortcut
+      - compton
+      - xrdp
+      - firefox
+
+
+  - name: "Login Manager - Copy template 50-no-guest.conf.j2 to /etc/lightdm/lightdm.conf.d/50-no-guest.conf"
+    template:
+      src: 50-no-guest.conf
+      dest: /etc/lightdm/lightdm.conf.d/50-no-guest.conf
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: "Login Manager - Copy template 50-login-conf.j2 to /etc/lightdm/lightdm.conf.d/50-login-config.conf"
+    template:
+      src: 50-login-conf.j2
+      dest: /etc/lightdm/lightdm.conf.d/50-login-config.conf
+      owner: root
+      group: root
+      mode: 0755
+ 
+  - name: "Startmenu - Copy file ubuntu-black-start.png to /usr/share/lubuntu/images/ubuntu-black-start.png "
+    copy:
+      src: ubuntu-black-start.png
+      dest: /usr/share/lubuntu/images/ubuntu-black-start.png
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: "Panels - Copy template panel.j2 to /etc/xdg/lxpanel/LXDE/panels/panel"
+    template:
+      src: panel.j2
+      dest: /etc/xdg/lxpanel/LXDE/panels/panel
+      owner: root
+      group: root
+      mode: 0755
+
+   
+
