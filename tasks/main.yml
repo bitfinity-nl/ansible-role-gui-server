@@ -3,16 +3,15 @@
   #
   # Author: Luc Rutten
   # Version: 1.0
+  # File: tasks/main.yml
   #
   # Description: Standardized lightweight gui for Ubuntu server
-  # File: tasks/main.yml
   
-  - name: "Install lubuntu-desktop (Basic)"
-    apt:
-      name: lubuntu-desktop
-      update_cache: yes
+
+  - name: "Openbox | add noobslab/themes repository"
+    apt_repository:
+      repo: 'ppa:noobslab/themes'
       state: present
-      install_recommends: no
 
   - name: "Install additional packages"
     apt:
@@ -20,31 +19,65 @@
       update_cache: yes
       state: present
     with_items:
+      - lubuntu-core
       - lxterminal
-      - lxappearence
+      - lxappearance
       - lxshortcut
       - compton
       - xrdp
       - firefox
+      - windos-10-themes
 
-
-  - name: "Login Manager - Copy template 50-no-guest.conf.j2 to /etc/lightdm/lightdm.conf.d/50-no-guest.conf"
+  - name: "LXDE - Copy template pcmanfm.conf to /etc/xdg/pcmanfm/LXDE/pcmanfm.conf"
     template:
-      src: 50-no-guest.conf
+      src: pcmanfm.conf.j2
+      dest: /etc/xdg/pcmanfm/LXDE/pcmanfm.conf
+      owner: root
+      group: root
+      mode: 0755
+      follow: yes
+
+  - name: "LXDE - Copy template desktop.conf.j2 to /etc/xdg/lxsession/LXDE/desktop.conf"
+    template:
+      src: rc.xml.j2
+      dest: /etc/xdg/lxsession/LXDE/desktop.conf
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: "LightDM - Copy template rc.xml.j2 to /etc/xdg/openbox/LXDE/rc.xml"
+    template:
+      src: rc.xml.j2
+      dest: /etc/xdg/openbox/LXDE/rc.xml
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: "LightDM - Copy template 50-no-guest.conf.j2 to /etc/lightdm/lightdm.conf.d/50-no-guest.conf"
+    template:
+      src: 50-no-guest.conf.j2
       dest: /etc/lightdm/lightdm.conf.d/50-no-guest.conf
       owner: root
       group: root
       mode: 0755
 
-  - name: "Login Manager - Copy template 50-login-conf.j2 to /etc/lightdm/lightdm.conf.d/50-login-config.conf"
+  - name: "LightDM - Copy template 30_lubuntu.conf.j2 to  /etc/lightdm/lightdm-gtk-greeter.conf.d/30_lubuntu.conf"
     template:
-      src: 50-login-conf.j2
+      src: 30_lubuntu.conf.j2
+      dest: /etc/lightdm/lightdm-gtk-greeter.conf.d/30_lubuntu.conf
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: "LightDM - Copy template 50-login-conf.j2 to /etc/lightdm/lightdm.conf.d/50-login-config.conf"
+    template:
+      src: 50-login-config.conf.j2
       dest: /etc/lightdm/lightdm.conf.d/50-login-config.conf
       owner: root
       group: root
       mode: 0755
  
-  - name: "Startmenu - Copy file ubuntu-black-start.png to /usr/share/lubuntu/images/ubuntu-black-start.png "
+  - name: "Panel - Copy file ubuntu-black-start.png to /usr/share/lubuntu/images/ubuntu-black-start.png "
     copy:
       src: ubuntu-black-start.png
       dest: /usr/share/lubuntu/images/ubuntu-black-start.png
@@ -52,7 +85,7 @@
       group: root
       mode: 0755
 
-  - name: "Panels - Copy template panel.j2 to /etc/xdg/lxpanel/LXDE/panels/panel"
+  - name: "Panel - Copy template panel.j2 to /etc/xdg/lxpanel/LXDE/panels/panel"
     template:
       src: panel.j2
       dest: /etc/xdg/lxpanel/LXDE/panels/panel
