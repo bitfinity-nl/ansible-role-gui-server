@@ -84,6 +84,14 @@
       owner: root
       group: root
       mode: 0755
+      
+  - name: "Panel - Copy file ubuntu-black-start.png to /usr/share/lubuntu/images/panel_bg.png "
+    copy:
+      src: panel_bg.png
+      dest: /usr/share/lubuntu/images/panel_bg.png
+      owner: root
+      group: root
+      mode: 0755
 
   - name: "Panel - Copy template panel.j2 to /etc/xdg/lxpanel/LXDE/panels/panel"
     template:
